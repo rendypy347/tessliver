@@ -79,7 +79,7 @@ export default function Admin({ matches }) {
 
 
 export async function getServerSideProps() {
-  const { data: matches } = await supabase
+  const { data: matches } = await supabaseAdmin
     .from("matches")
     .select("*")
     .order("start_datetime", { ascending: true });
