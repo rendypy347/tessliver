@@ -79,10 +79,10 @@ export default function Admin({ matches }) {
 
 
 export async function getServerSideProps() {
-  const { data: matches, error } = await supabaseAdmin
-    .from("matches")
-    .select("*")
-    .order("start_datetime", { ascending: true });
+  const { data: matches } = await supabaseAdmin
+  .from("matches")
+  .select("*")
+  .order("start_datetime", { ascending: true });
 
   if (error) {
     console.error(error); // untuk debug log di Vercel
