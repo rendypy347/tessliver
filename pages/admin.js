@@ -4,6 +4,7 @@ import AddMatchModal from "../components/AddMatchModal";
 import MatchCard from "../components/MatchCard";
 import EditMatchModal from "../components/EditMatchModal";
 import FetchMatchesModal from "../components/FetchMatchesModal";
+import { supabaseAdmin } from "../lib/supabaseAdmin";
 
 export default function Admin({ matches }) {
   const [editMatch, setEditMatch] = useState(null);
