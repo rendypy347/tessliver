@@ -5,6 +5,7 @@ import MatchCard from "../components/MatchCard";
 import EditMatchModal from "../components/EditMatchModal";
 import FetchMatchesModal from "../components/FetchMatchesModal";
 import { supabaseAdmin } from "../lib/supabaseAdmin";
+import cookie from 'cookie';
 
 export default function Admin({ matches }) {
   const [editMatch, setEditMatch] = useState(null);
@@ -78,15 +79,23 @@ export default function Admin({ matches }) {
 }
 
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req }) {
+  const cookies = cookie.parse(req.headers.cookie || '');
+  const isAdmin = cookies.admin_auth === 'true';
+
+  if (!isAdmin) {
+    return {
+      redirect: {
+        destination: '/admin-login',
+        permanent: false,
+      },
+    };
+  }
+
   const { data: matches, error } = await supabaseAdmin
     .from("matches")
     .select("*")
     .order("start_datetime", { ascending: true });
-
-  if (error) {
-    console.error(error); // log di Vercel
-  }
 
   return {
     props: {
