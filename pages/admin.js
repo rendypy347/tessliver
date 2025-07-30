@@ -7,10 +7,13 @@ import FetchMatchesModal from "../components/FetchMatchesModal";
 import { supabaseAdmin } from "../lib/supabaseAdmin";
 import cookie from 'cookie';
 
-export default function Admin({ matches }) {
+export default function Admin({ matches: initialMatches }) {
   const [editMatch, setEditMatch] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
   const [showFetch, setShowFetch] = useState(false);
+
+  // Pastikan aman di client
+  const matches = Array.isArray(initialMatches) ? initialMatches : [];
 
   const refresh = () => window.location.reload();
 
@@ -65,24 +68,22 @@ export default function Admin({ matches }) {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-  {matches && matches.length > 0 ? (
-    matches.map((match) => (
-      <MatchCard
-        key={match.id}
-        match={match}
-        onEdit={(m) => setEditMatch(m)}
-        onDelete={(m) => handleDelete(m)}
-      />
-    ))
-  ) : (
-    <p className="text-center col-span-full">Tidak ada data jadwal.</p>
-  )}
-</div>
-
+        {matches.length > 0 ? (
+          matches.map((match) => (
+            <MatchCard
+              key={match.id}
+              match={match}
+              onEdit={() => setEditMatch(match)}
+              onDelete={() => handleDelete(match)}
+            />
+          ))
+        ) : (
+          <p className="text-center col-span-full">Tidak ada data jadwal.</p>
+        )}
+      </div>
     </main>
   );
 }
-
 
 export async function getServerSideProps({ req }) {
   const cookies = cookie.parse(req.headers.cookie || '');
@@ -108,7 +109,7 @@ export async function getServerSideProps({ req }) {
 
   return {
     props: {
-      matches: matches || [],
+      matches: matches || [], // Selalu array
     },
   };
 }
