@@ -65,15 +65,20 @@ export default function Admin({ matches }) {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {matches.map((match) => (
-          <MatchCard
-            key={match.id}
-            match={match}
-            onEdit={(m) => setEditMatch(m)}
-            onDelete={(m) => handleDelete(m)}
-          />
-        ))}
-      </div>
+  {matches && matches.length > 0 ? (
+    matches.map((match) => (
+      <MatchCard
+        key={match.id}
+        match={match}
+        onEdit={(m) => setEditMatch(m)}
+        onDelete={(m) => handleDelete(m)}
+      />
+    ))
+  ) : (
+    <p className="text-center col-span-full">Tidak ada data jadwal.</p>
+  )}
+</div>
+
     </main>
   );
 }
@@ -96,6 +101,10 @@ export async function getServerSideProps({ req }) {
     .from("matches")
     .select("*")
     .order("start_datetime", { ascending: true });
+
+  if (error) {
+    console.error("Supabase error:", error);
+  }
 
   return {
     props: {
