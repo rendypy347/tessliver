@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import cookie from 'cookie'; // Tambah ini di atas
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
